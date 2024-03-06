@@ -1,0 +1,140 @@
+
+/*
+;•--------------------- NOTES -----------------------------------------------• 
+∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+○------------------------- Base Notes 
+» Reload Script-------- DoubleTap--⮚ Ctrl + [HOME] 
+» Exit Script------------- DoubleTap--⮚ Ctrl + [Esc] 
+
+» Script Updater: Auto-reload script upon saved changes.
+    ▹ If you make any changes to the script file and save it, 
+          the script will automatically reload itself and continue
+          running without manual intervention.
+∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+○------------------------- Script Specific Notes 
+» Use the same hotkey for multiple purposes depending on how many times the hotkey is pressed.
+» 
+∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+○--------------------- NOTES END -----------------------------------------○ 
+*/
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+;•--------------------- Auto-Execute ---------------------------------------• 
+Gosub, AutoExecute
+;○--------------------- Auto-Execute End ---------------------------------○ 
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+;•-----------------------🔥 HotKey 🔥 
+^T:: 		 ; ⮘—— (Ctrl+T) 
+;○-----------------------🔥 HotKey 🔥 
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+
+
+
+
+Switch, Morse()
+    {
+        Case "0": Send, While holding down the Ctrl key,`n  you tapped the hotkey " T " 1 time.`n
+        Case "00": Send, While holding down the Ctrl key,`n  you tapped the hotkey " T " 2 times.`n
+        Case "000": Send, While holding down the Ctrl key,`n  you tapped the hotkey " T " 3 times.`n
+        Case "0000": Send, While holding down the Ctrl key,`n  you tapped the hotkey " T " 4 times.`n
+        Case "00000": Send, 5 times. You get the idea.`n
+        Case "000000": Send, `nAdjust Key tap timing by %A_Tab%(6 times FYI)`n  increasing or decreasing the number below`n    (Timeout = 250)
+;; etc... 
+    }
+Return
+
+
+;----------------- 
+
+Morse(Timeout = 250) {
+    Global Pattern := ""
+	RegExMatch(A_ThisHotkey, "\W$|\w*$", Key)
+    While, !ErrorLevel {
+        T := A_TickCount
+        KeyWait %Key%
+        Pattern .= A_TickCount-T > Timeout
+        KeyWait %Key%,% "DT" Timeout/1000
+    } Return Pattern
+}
+
+
+
+/* ..............↓.... TEST SCRIPT BELOW HERE ....↓...........
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+
+
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+;•--------------------- Reload/Exit Routine -------------------------------• 
+RETURN
+;------------ RELOAD ------- RELOAD ------- RELOAD ---------  
+^Home:: 
+If (A_ThisHotkey = A_PriorHotkey && A_TimeSincePriorHotkey < 200) 	 ; ←←← Double-Tap in less than 200 milliseconds.
+    Soundbeep, 1700, 75
+    Gui, Destroy
+        SoundSet, % master_volume
+    Reload
+Return
+;--------------- EXIT ------------ EXIT --------- EXIT ------------ 
+^Esc:: 
+If (A_ThisHotkey = A_PriorHotkey && A_TimeSincePriorHotkey < 200) 	 ; ←←← Double-Tap in less than 200 milliseconds.
+    Soundbeep, 1700, 75
+    Gui, Destroy
+        SoundSet, % master_volume
+        ExitApp
+Return
+;○------------------ Reload/Exit Routine End ----------------------------○ 
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+;•--------------------- Script Updater -------------------------------------• 
+UpdateCheck: 	 ; Check if the script file has been modified.
+    oldModTime := currentModTime
+FileGetTime, currentModTime, %A_ScriptFullPath%
+;∘—— If the modification timestamp has changed, reload the script. 
+    if  (oldModTime = currentModTime) Or (oldModTime = "")
+        Return
+    Soundbeep, 2100, 100
+Reload
+;○------------------- Script Updater End ---------------------------------○ 
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+;•--------------------- Auto-Execute Sub ---------------------------------• 
+AutoExecute: 
+; #MaxThreadsPerHotkey 3
+#NoEnv 
+#Persistent 
+#SingleInstance, Force 
+SetBatchLines -1 
+SetTimer, UpdateCheck, 500 
+SetTitleMatchMode 2 
+SoundGet, master_volume
+Menu, Tray, Icon, wmploc.dll, 12
+Return
+;○------------------ Auto-Execute Sub End ------------------------------○ 
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+;•----------------------- GoSubs -------------------------------------------• 
+;--------------------------------------------- 
+
+;----------- 
+
+;--------------------------------------------- 
+;○--------------------- GoSubs End ---------------------------------------○ 
+; ∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙=∙ 
+/* 
+ •-------------------------------------------------------------------------------------------------• 
+	  ∘﹤⪻⋘⪡⫷⫷⫷⫷⫷⫷ SCRIPT END ⫸⫸⫸⫸⫸⫸⪢⋙⪼﹥∘ 
+ •-------------------------------------------------------------------------------------------------• 
+*/ 
+
